@@ -6,7 +6,8 @@ class DatabaseConfig:
     def __init__(self):
         self.USERNAME: str = os.getenv("ATLAS_CLUSTER_USERNAME")
         self.PASSWORD: str = os.getenv("ATLAS_CLUSTER_PASSWORD")
-        self.URL: str = f"mongodb+srv://{os.getenv('ATLAS_CLUSTER_USERNAME')}:{os.getenv('ATLAS_CLUSTER_PASSWORD')}@cluster0.msojpmv.mongodb.net"
+        #self.URL: str = f"mongodb+srv://{os.getenv('ATLAS_CLUSTER_USERNAME')}:{os.getenv('ATLAS_CLUSTER_PASSWORD')}@cluster0.msojpmv.mongodb.net"
+        self.URL: str = f"mongodb+srv://<username>:<password>@cluster0.msojpmv.mongodb.net"
         self.DBNAME: str = os.getenv("DATABASE_NAME")
         self.COLLECTION: str = "Embeddings"
 
