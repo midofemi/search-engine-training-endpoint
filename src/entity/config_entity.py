@@ -4,16 +4,14 @@ import os
 
 class DatabaseConfig:
     def __init__(self):
-        self.USERNAME: str = os.getenv("ATLAS_CLUSTER_USERNAME")
-        self.PASSWORD: str = os.getenv("ATLAS_CLUSTER_PASSWORD")
-        #self.URL: str = f"mongodb+srv://{os.getenv('ATLAS_CLUSTER_USERNAME')}:{os.getenv('ATLAS_CLUSTER_PASSWORD')}@cluster0.msojpmv.mongodb.net"
+        self.USERNAME: str = os.environ["DATABASE_USERNAME"]
+        self.PASSWORD: str = os.environ["DATABASE_PASSWORD"]
         self.URL: str = "mongodb+srv://<username>:<password>@cluster0.msojpmv.mongodb.net"
-        self.DBNAME: str = os.getenv("DATABASE_NAME")
+        self.DBNAME: str = "ReverseImageSearchEngine"
         self.COLLECTION: str = "Embeddings"
 
     def get_database_config(self):
         return self.__dict__
-
 
 class DataIngestionConfig:
     """
