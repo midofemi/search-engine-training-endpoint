@@ -6,7 +6,8 @@ from typing import List, Dict, Any
 class MongoDBClient(object):
     def __init__(self):
         self.config = DatabaseConfig()
-        url = self.config.URL.replace("<username>", self.config.USERNAME).replace("<password>", self.config.PASSWORD)
+        url = self.config.URL
+        #url = self.config.URL.replace("<username>", self.config.USERNAME).replace("<password>", self.config.PASSWORD)
         self.client = MongoClient(url)
 
     def insert_bulk_record(self, documents: List[Dict[str, Any]]):
