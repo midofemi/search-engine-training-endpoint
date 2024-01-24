@@ -1,3 +1,4 @@
+#This .sh file is for connecting to our GPU remote machine
 # Paper Space Machine cmds
 sudo apt-get update
 sudo apt-get upgrade -y

@@ -20,6 +20,12 @@ ImageRecord = namedtuple("ImageRecord", ["img", "label", "s3_link"])
 
 
 class ImageFolder(Dataset):
+    """
+    So here we stored every image in a path. This is where we create our custom dataset. I did a Dev notebook on how it done. It looks like this:
+    image_records: [ImageRecord(img=WindowsPath('C:/Users/midof/OneDrive/Desktop/INeuron/Data_Science_Project/Industry_Ready_Proj/CNN/
+    Search_Engine/search-engine-training-endpoint/notebooks/caltech-101/accordion/image_0001.jpg'), label='accordion'), AND SO ON]. It will be
+    on a list. So each index would have a path, images and URL
+    """
     def __init__(self, label_map: Dict):
         self.config = ImageFolderConfig()
         self.config.LABEL_MAP = label_map
@@ -29,7 +35,7 @@ class ImageFolder(Dataset):
 
         file_list = os.listdir(self.config.ROOT_DIR)
 
-        for class_path in file_list:
+        for class_path in file_list: #Read all the images
             path = os.path.join(self.config.ROOT_DIR, f"{class_path}")
             images = os.listdir(path)
             for image in tqdm(images):
@@ -40,6 +46,9 @@ class ImageFolder(Dataset):
                                                                                          image)))
 
     def transformations(self):
+        """
+        Transformation function to transform our data
+        """
         TRANSFORM_IMG = transforms.Compose(
             [transforms.Resize(self.config.IMAGE_SIZE),
              transforms.CenterCrop(self.config.IMAGE_SIZE),
@@ -51,9 +60,13 @@ class ImageFolder(Dataset):
         return TRANSFORM_IMG
 
     def __len__(self):
-        return len(self.image_records)
+        return len(self.image_records) #This gives us the length of the list we created above of our custom dataset
 
     def __getitem__(self, idx):
+        """
+        Remember our __init__ function above.? We are now interating through that LIST of our custom dataset we have created. We want
+        the images, targets and the URL link we generated above
+        """
         record = self.image_records[idx]
         images, targets, links = record.img, record.label, record.s3_link
         images = Image.open(images)
@@ -77,9 +90,13 @@ class EmbeddingGenerator:
         self.embedding_model.eval()
 
     def load_model(self):
+        """
+        Load the model we have trained. This would be the RESNET + CV. After we load it, we then took the final out (now we left just with the)
+        flatten layer in a vector form
+        """
         model = self.model.to(self.device)
-        model.load_state_dict(torch.load(self.config.MODEL_STORE_PATH, map_location=self.device))
-        return nn.Sequential(*list(model.children())[:-1])
+        model.load_state_dict(torch.load(self.config.MODEL_STORE_PATH, map_location=self.device)) #FIne tune folder path
+        return nn.Sequential(*list(model.children())[:-1]) #This is where we remove the neural network so we can have the embeddings of our flatten layer
 
     def run_step(self, batch_size, image, label, s3_link):
         records = dict()
@@ -93,7 +110,7 @@ class EmbeddingGenerator:
 
         df = pd.DataFrame(records)
         records = list(json.loads(df.T.to_json()).values())
-        self.mongo.insert_bulk_record(records)
+        self.mongo.insert_bulk_record(records) #Store the embeddings in MongoDB
 
         return {"Response": f"Completed Embeddings Generation for {batch_size}."}
 

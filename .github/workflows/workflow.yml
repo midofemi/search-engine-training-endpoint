@@ -1,5 +1,6 @@
 name: workflow
-
+# So normally: ON: Main which means whenever we push changes to our main branch, trigger our CICD pipeline. In this case we are not doing 
+#that thus having manual control over our pipeline. Only trigger our pipeline when we manually click on workflow dispatch on GitHub. 
 on: [workflow_dispatch]
 
 permissions:
@@ -20,7 +21,8 @@ jobs:
       - name: Run unit tests
         run: echo "Running unit tests"
 
-
+#There are some added things on CD we haven't seen before and this is because we are using GPU via PaperSpace which we will be paying for.
+#Paperspace will rent us GPU to train our model so we have to have that GPU ready before going into MT.
   Continuous-Deployment:
     name: Continuous Deployment
     needs: integration
@@ -33,19 +35,19 @@ jobs:
 
       - name: Check Node Version
         run: npm -v
-
+      #Install PaperSpace CLI
       - name: Install Paperspace Cli
         run: npm install -g paperspace-node
-
+      #Once our CLI is installed. Let check the version of PaperSpace
       - name: Test Paperspace Cli
         run: paperspace -version
-
+      #Now start our remote machine which has the GPU in paperspace
       - name: Start a Gpu Instance
         run: paperspace machines start --apiKey ${{ secrets.API_KEY }} --machineId ${{ secrets.MACHINE_ID }}
-
+      #Wait until the machine is teady before starting training. Self Explanatory
       - name: Wait For Instance state to be ready
         run: paperspace machines waitfor --apiKey ${{ secrets.API_KEY }} --machineId ${{ secrets.MACHINE_ID }} --state "ready"
-
+#Now our GPU is ready. Let start training.
   Continuous-Training:
     name: Continuous Training
     needs: Continuous-Deployment
@@ -53,7 +55,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
+      #Configure AWS CLI so we can fetch/get our data from our S3 bucket to train our model (Remember the flow above)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -69,11 +71,11 @@ jobs:
           AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
         run: |
           pip3 install -r requirements.txt
-          python3 src/pipeline/pipeline.py 
+          python3 src/pipeline/pipeline.py #Run our training pipeline
 
       - name: Training Completed
         run: echo "Training Completed"
-
+#Once our training is done. Please turn OFF our remote machine for paperspace which we have ON and clean it up. 
   Clean-Workbench:
     name: Clean Workbench
     needs: Continuous-Training

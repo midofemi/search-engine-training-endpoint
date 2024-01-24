@@ -7,17 +7,20 @@ We have to manually trigger workflow to start the training.
 ```
 git clone https://github.com/midofemi/search-engine-training-endpoint.git
 ```
+
+### Create conda environment
+```
+conda create -p ./env python=3.8 -y
+```
+
 ### Activate Conda environment
 ```
 conda activate env/
 ```
+
 ### Install requirements
 ```
 pip install -r requirements.txt
-```
-### Create conda environment
-```
-conda create -p ./env python=3.8.13 -y
 ```
 # Architecture 
 ![image](https://user-images.githubusercontent.com/40850370/194861755-9e04c1ca-f33e-4fbf-8503-2ed5e6de887d.png)
