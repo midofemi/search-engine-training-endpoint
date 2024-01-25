@@ -65,8 +65,6 @@ jobs:
 
       - name: Run Training Pipeline
         env:
-          #ATLAS_CLUSTER_USERNAME: ${{ secrets.ATLAS_CLUSTER_USERNAME }}
-          #ATLAS_CLUSTER_PASSWORD: ${{ secrets.ATLAS_CLUSTER_PASSWORD }}
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}

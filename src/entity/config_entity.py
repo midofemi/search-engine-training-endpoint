@@ -6,8 +6,8 @@ class DatabaseConfig:
     def __init__(self):
         self.USERNAME: str = os.environ["DATABASE_USERNAME"]
         self.PASSWORD: str = os.environ["DATABASE_PASSWORD"]
-        #self.URL: str = "mongodb+srv://<username>:<password>@cluster0.msojpmv.mongodb.net"
-        self.URL = "mongodb+srv://{os.getenv('ATLAS_CLUSTER_USERNAME')}:{os.getenv('ATLAS_CLUSTER_PASSWORD')}@cluster0.msojpmv.mongodb.net"
+        self.URL: str = "mongodb+srv://<username>:<password>@cluster0.msojpmv.mongodb.net"
+        #self.URL = "mongodb+srv://{os.getenv('ATLAS_CLUSTER_USERNAME')}:{os.getenv('ATLAS_CLUSTER_PASSWORD')}@cluster0.msojpmv.mongodb.net"
         self.DBNAME: str = "ReverseImageSearchEngine"
         self.COLLECTION: str = "Embeddings"
 
